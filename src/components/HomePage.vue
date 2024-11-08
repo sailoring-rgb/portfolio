@@ -53,7 +53,6 @@ export default {
           }
         } else {
           if (this.offset === 0) {
-            // Increase the speed of word change
             this.currentWordIndex = (this.currentWordIndex + 1) % this.words.length;
             this.forwards = true;
           } else {
@@ -61,7 +60,7 @@ export default {
           }
         }
         this.title = currentWord.substring(0, this.offset);
-      }, this.speed); // Speed of typing effect
+      }, this.speed);
     },
   },
 
