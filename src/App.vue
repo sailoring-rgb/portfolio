@@ -15,6 +15,9 @@
 
     <HomePage ref="homePage" />
     <AboutMePage ref="aboutPage" />
+    <BackgroundPage ref="backgroundPage" />
+    <ProjectsPage ref="projectsPage" />
+    <ContactsPage ref="contactsPage" />
 
     <div class="card-container">
       <div v-if="!isMinimized">
@@ -60,12 +63,18 @@
 
 import HomePage from './components/HomePage.vue'
 import AboutMePage from './components/AboutMePage.vue'
+import ProjectsPage from './components/ProjectsPage.vue'
+import ContactsPage from './components/ContactsPage.vue'
+import BackgroundPage from './components/BackgroundPage.vue'
 
 export default {
   name: 'App',
   components: {
     HomePage,
-    AboutMePage
+    AboutMePage,
+    BackgroundPage,
+    ProjectsPage,
+    ContactsPage
   },
   data(){
     return {
@@ -114,8 +123,7 @@ export default {
         require('@/assets/songs/everyBreathYouTake.mp3'),
         require('@/assets/songs/aGroovyKindOfLove.mp3')
       ],
-      //sections: ['homePage', 'aboutPage', 'backgroundPage', 'projectsPage', 'contactsPage'],
-      sections: ['homePage', 'aboutPage'],
+      sections: ['homePage', 'aboutPage', 'backgroundPage', 'projectsPage', 'contactsPage'],
       currentPage: '',
     }
   },
