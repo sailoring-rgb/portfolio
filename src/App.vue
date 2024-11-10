@@ -87,12 +87,10 @@ export default {
       isMinimized: true,
       cursorPosition: { x: 0, y: 0 },
       cursorDots: [],
-      amount: 15,
       index: 0,
       element: null,
       scale: null,
       range: null,
-      limit: null,
       anglespeed: null,
       lockX: null,
       lockY: null,
@@ -247,14 +245,13 @@ export default {
 
     buildDots(cursor) {
       class Dot {
-        constructor(index = 0) {
+        constructor(index) {
           this.index = index;
           this.anglespeed = 0.05;
           this.x = 0;
           this.y = 0;
           this.scale = 1 - 0.05 * index;
           this.range = 26/2 - 26/2 * this.scale+2;
-          this.limit = 26 * 0.75 * this.scale;
           this.element = document.createElement("span");
           TweenMax.set(this.element, {scale: this.scale});
           cursor.appendChild(this.element);
@@ -298,11 +295,9 @@ export default {
 
         let { x, y } = this.cursorPosition;
 
-        // Adjust the cursor and dot movements to follow the mouse
         this.cursorDots.forEach((dot, index, dots) => {
           let nextDot = dots[index + 1] || dots[0];
           
-          // Ensure the dots' positions are always relative to the cursor position
           dot.x = x;
           dot.y = y;
           dot.draw(delta); 
