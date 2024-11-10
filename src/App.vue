@@ -1,15 +1,16 @@
 <template>
+  <div class="cursor" id="cursor"></div>
+
   <div class="body" @scroll="handleScroll" style="overflow-y: scroll;">
-    <nav class="navbar fixed-top navbar-expand-lg" style="">
+    <nav class="navbar fixed-top navbar-expand-lg" style="border-bottom: 1px solid #e2dfd6;">
       <div class="container-fluid">
         <a href="#homePage">
           <img src="./assets/logo.png" style="width:50px;align-items: center;">
         </a>
-        <a class="navbar-brand" @click="scrollToPage('aboutPage')">ABOUT</a>
-        <a class="navbar-brand" @click="scrollToPage('backgroundPage')">BACKGROUND</a>
-        <a class="navbar-brand" @click="scrollToPage('projectsPage')">PROJECTS</a>
-        <a class="navbar-brand" @click="scrollToPage('contactsPage')">CONTACTS</a>
-        <p></p>
+        <a class="navbar-brand" @click="scrollToPage('aboutPage')" >ABOUT</a>
+        <a class="navbar-brand" @click="scrollToPage('backgroundPage')" >BACKGROUND</a>
+        <a class="navbar-brand" @click="scrollToPage('projectsPage')" >PROJECTS</a>
+        <a class="navbar-brand" style="margin-right: 10%;" @click="scrollToPage('contactsPage')" >CONTACTS</a>
       </div>
     </nav>
 
@@ -30,7 +31,7 @@
             <div class="progress-bar-dot" :style="{ left: progressPercent + '%' }"></div>
           </div>
 
-          <div class="controls">
+          <div class="controls" >
             <button @click="previousSong" class="btn" style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin-right: -10px;  color: #e2dfd6;">⏮</button>
             <button @click="toggleAudio" class="btn" style="font-family: Arial, Helvetica, sans-serif; font-size: 20px; background: #e2dfd6; border-radius: 100px; width:45px; color: #687160;">
               {{ isPlaying ? '⏸' : '▸' }}
@@ -40,7 +41,7 @@
         </div>
       </div>
 
-      <div v-if="isMinimized" style="font-family: Arial, Helvetica, sans-serif; position: fixed; right: 40px; bottom: 40px;">
+      <div v-if="isMinimized" style="position: fixed; left: 90%; bottom: 20px; transform: translateX(-50%);">
         <button @click="toggleAudio" class="btn minimized-btn" :class="{ 'minimized': isMinimized }">
           {{ isPlaying ? '⏸' : '▸' }}
         </button>
@@ -60,6 +61,7 @@
 <script>
 //import AOS from "aos";
 //import "aos/dist/aos.css";
+import { TweenMax } from "gsap";
 
 import HomePage from './components/HomePage.vue'
 import AboutMePage from './components/AboutMePage.vue'
@@ -82,13 +84,31 @@ export default {
       isPlaying: false,
       currentSongIndex: 0,
       progressPercent: 0,
-      isMinimized: false,
+      isMinimized: true,
+      cursorPosition: { x: 0, y: 0 },
+      cursorDots: [],
+      amount: 15,
+      index: 0,
+      element: null,
+      scale: null,
+      range: null,
+      limit: null,
+      anglespeed: null,
+      lockX: null,
+      lockY: null,
+      angleX: null,
+      angleY: null,
+      idle: false,
+      timeoutID: null,
+      lastFrame: 0,
+      x: 0,
+      y: 0,
       songTitles: [ 
+        {"'74-'75": 'The Connells'},
         {'Save A Prayer': 'Duran Duran'},
         {'You Needed Me': 'Anne Murray'},
         {"We're All Alone": 'Rita Coolidge'},
         {'One Day In Your Life': 'Michael Jackson'},
-        {"'74-'75": 'The Connells'},
         {'House Of The Rising Sun': 'The Animals'},
         {'One More Night': 'Phil Collins'},
         {'Daydream': 'Wallace Collection'},
@@ -104,11 +124,11 @@ export default {
         {'A Groovy Kind Of Love': 'Phil Collins'}
       ],
       songs: [
+        require('@/assets/songs/7475.mp3'),
         require('@/assets/songs/saveAPrayer.mp3'),
         require('@/assets/songs/youNeededMe.mp3'),
         require('@/assets/songs/wereAllAlone.mp3'),
         require('@/assets/songs/oneDayInYourLife.mp3'),
-        require('@/assets/songs/7475.mp3'),
         require('@/assets/songs/houseOfTheRisingSun.mp3'),
         require('@/assets/songs/oneMoreNight.mp3'),
         require('@/assets/songs/daydream.mp3'),
@@ -130,6 +150,9 @@ export default {
   mounted(){
     window.addEventListener('scroll', this.handleScroll);
     this.setupAudio();
+    window.addEventListener("mousemove", this.onMouseMove);
+    this.initializeCursor();
+    //window.addEventListener("touchmove", this.onTouchMove);
   },
   methods: {
     setupAudio() {
@@ -202,12 +225,123 @@ export default {
     scrollToPage(page){
       const nextSection = this.$refs[page];
       nextSection.$el.scrollIntoView({ behavior: 'smooth' });
-    }
+    },
+
+    startIdleTimer() {
+      const idleTimeout = 150;
+      this.timeoutID = setTimeout(this.goInactive(), idleTimeout);
+      this.idle = false;
+    },
+
+    resetIdleTimer() {
+      clearTimeout(this.timeoutID);
+      this.startIdleTimer();
+    },
+
+    goInactive() {
+      this.idle = true;
+      for (let dot of this.cursorDots) {
+          dot.lock();
+      }
+    },
+
+    buildDots(cursor) {
+      class Dot {
+        constructor(index = 0) {
+          this.index = index;
+          this.anglespeed = 0.05;
+          this.x = 0;
+          this.y = 0;
+          this.scale = 1 - 0.05 * index;
+          this.range = 26/2 - 26/2 * this.scale+2;
+          this.limit = 26 * 0.75 * this.scale;
+          this.element = document.createElement("span");
+          TweenMax.set(this.element, {scale: this.scale});
+          cursor.appendChild(this.element);
+        }
+
+        lock() {
+            this.lockX = this.x;
+            this.lockY = this.y;
+            this.angleX = Math.PI * 2 * Math.random();
+            this.angleY = Math.PI * 2 * Math.random();
+        }
+
+        draw() {
+          if (!this.idle || this.index <= Math.floor(20 * 0.3)) {
+            TweenMax.set(this.element, {x: this.x, y: this.y});
+          } else {
+            this.angleX += this.anglespeed;
+            this.angleY += this.anglespeed;
+            this.y = this.lockY + Math.sin(this.angleY) * this.range;
+            this.x = this.lockX + Math.sin(this.angleX) * this.range;
+            TweenMax.set(this.element, {x: this.x, y: this.y});
+          }
+        }
+      }
+
+      for (let i = 0; i < 20; i++) {
+          let dot = new Dot(i);
+          this.cursorDots.push(dot);
+      }
+    },
+
+    initializeCursor() {
+      const cursor = document.getElementById("cursor");
+      if (!cursor) return;
+
+      this.lastFrame += new Date();
+      this.buildDots(cursor);
+
+      const animateDots = timestamp => {
+        const delta = timestamp - this.lastFrame;
+
+        let { x, y } = this.cursorPosition;
+
+        // Adjust the cursor and dot movements to follow the mouse
+        this.cursorDots.forEach((dot, index, dots) => {
+          let nextDot = dots[index + 1] || dots[0];
+          
+          // Ensure the dots' positions are always relative to the cursor position
+          dot.x = x;
+          dot.y = y;
+          dot.draw(delta); 
+
+          if (!this.idle || index <= Math.floor(20 * 0.3)) {
+            const dx = (nextDot.x - dot.x) * 0.35;
+            const dy = (nextDot.y - dot.y) * 0.35;
+            x += dx;
+            y += dy;
+          }
+        });
+
+        this.lastFrame = timestamp;
+        requestAnimationFrame(animateDots);
+      };
+
+      animateDots();
+    },
+
+    onMouseMove(event) {
+      this.cursorPosition = { x: event.clientX / 2 - 5, y: event.clientY / 2 - 5};
+      const cursor = document.getElementById('cursor');
+      if (cursor) {
+        cursor.style.left = `${this.cursorPosition.x}px`;
+        cursor.style.top = `${this.cursorPosition.y}px`;
+      }
+      this.resetIdleTimer();
+    },
   },
 
   beforeUnmount() {
-    this.audio.removeEventListener('ended', this.nextSong);
-    this.audio.pause();
+    if (this.audio) {
+      this.audio.removeEventListener('ended', this.nextSong);
+      this.audio.pause();
+    }
+    
+    if (this.onMouseMove) {
+      window.removeEventListener("mousemove", this.onMouseMove);
+    }
   },
 }
 </script>
@@ -229,7 +363,7 @@ export default {
 }
 
 ::v-deep .navbar-brand {
-  font-size: medium;
+  font-size: 12px;
   font-family: monospace;
   letter-spacing: 1px;
   color: #e2dfd6;
@@ -237,7 +371,7 @@ export default {
 }
 
 ::v-deep .navbar-brand:hover {
-  font-size: medium;
+  font-size: 11px;
   font-family: monospace;
   letter-spacing: 1px;
   font-weight: bold;
@@ -294,19 +428,20 @@ button {
 
 ::v-deep .minimize-maximize-btn.minimized::after {
   position: fixed;
-  content: '+';
-  right: 40px;
-  font-size: 1.0rem;
+  content: '⤴';
+  left: 92%;
+  font-size: 0.8rem;
   font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
   border-radius: 50%;
-  background: #687160;
+  border: 1px solid #e2dfd6;
   color: #e2dfd6;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(-250%);
+  transform: translateY(-200%);
   cursor: pointer;
 }
 
@@ -315,8 +450,9 @@ button {
   top: 5px;
   right: 5px;
   margin: 5px;
-  content: '-';
-  font-size: 0.5rem;
+  content: '⤵';
+  font-size: 0.6rem;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   border-radius: 50%;
   border: 1px solid #e2dfd6;
@@ -333,25 +469,29 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif; 
+  font-size: 1.5rem;
   background: #e2dfd6;
   border-radius: 50%;
-  color: #687160;
-  width: 45px;
-  height: 45px;
+  color: #000;
+  width: 50px;
+  height: 50px;
   box-shadow: 1px 1px 15px #0000003d;
+  cursor: pointer;
 }
 
 ::v-deep .minimized-btn:hover{
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  background: #e2dfd6;
+  font-family: Arial, Helvetica, sans-serif; 
+  font-size: 1.5rem;
+  border: 2px solid #e2dfd6;
   border-radius: 50%;
-  color: #687160;
-  width: 45px;
-  height: 45px;
+  color: #e2dfd6;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
 }
 
 ::v-deep .progress-container {
@@ -407,5 +547,29 @@ button {
 
 ::v-deep .scroll-down-btn:hover {
   transform: scale(1.2);
+}
+</style>
+
+<style>
+.cursor {
+  position: fixed;
+  display: block;
+  top: 0;
+  left: 0;
+  border-radius: 0;
+  background-color: #e2dfd6;
+  transform-origin: center;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.cursor span {
+  position: absolute;
+  display: block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: #e2dfd6;
+  transform: translate(-50%, -50%);
 }
 </style>

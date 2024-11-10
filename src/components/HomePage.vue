@@ -92,7 +92,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -100%);
-  font-size: 6em;
+  font-size: 70px;
   color: #e2dfd6;
   font-family: 'EB Garamond';
   font-weight: 900;
@@ -115,7 +115,7 @@ export default {
   padding: 5px;
   padding-left: 40px;
   padding-right: 40px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .background {
