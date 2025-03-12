@@ -1,10 +1,10 @@
 <template>
-  <div class="cursor" id="cursor"></div>
-
   <div class="body" @scroll="handleScroll" style="overflow-y: scroll;">
-    <nav class="navbar fixed-top navbar-expand-lg" style="border-bottom: 1px solid #e2dfd6;">
+    <nav class="navbar fixed-top navbar-expand-lg"
+    :class="{'navbar-dark bg-dark': currentPage !== 'homePage'}"
+    style="border-bottom: 1px solid #7a7b77;">
       <div class="container-fluid">
-        <a href="#homePage">
+        <a @click="scrollToPage('homePage')">
           <img src="./assets/logo.png" style="width:50px;align-items: center;">
         </a>
         <a class="navbar-brand" @click="scrollToPage('aboutPage')" >ABOUT</a>
@@ -14,11 +14,21 @@
       </div>
     </nav>
 
-    <HomePage ref="homePage" />
-    <AboutMePage ref="aboutPage" />
-    <BackgroundPage ref="backgroundPage" />
-    <ProjectsPage ref="projectsPage" />
-    <ContactsPage ref="contactsPage" />
+    <div id="homePage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
+      <HomePage ref="homePage" />
+    </div>
+    <div id="aboutPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center bg-light">
+      <AboutMePage ref="aboutPage" />
+    </div>
+    <div id="backgroundPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
+      <BackgroundPage ref="backgroundPage" />
+    </div>
+    <div id="projectsPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center bg-light">
+      <ProjectsPage ref="projectsPage" />
+    </div>
+    <div id="contactsPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
+      <ContactsPage ref="contactsPage" />
+    </div>
 
     <div class="card-container">
       <div v-if="!isMinimized">
@@ -61,8 +71,6 @@
 <script>
 //import AOS from "aos";
 //import "aos/dist/aos.css";
-import { TweenMax } from "gsap";
-
 import HomePage from './components/HomePage.vue'
 import AboutMePage from './components/AboutMePage.vue'
 import ProjectsPage from './components/ProjectsPage.vue'
@@ -85,8 +93,6 @@ export default {
       currentSongIndex: 0,
       progressPercent: 0,
       isMinimized: true,
-      cursorPosition: { x: 0, y: 0 },
-      cursorDots: [],
       index: 0,
       element: null,
       scale: null,
@@ -142,15 +148,12 @@ export default {
         require('@/assets/songs/aGroovyKindOfLove.mp3')
       ],
       sections: ['homePage', 'aboutPage', 'backgroundPage', 'projectsPage', 'contactsPage'],
-      currentPage: '',
+      currentPage: 'homePage',
     }
   },
   mounted(){
     window.addEventListener('scroll', this.handleScroll);
     this.setupAudio();
-    window.addEventListener("mousemove", this.onMouseMove);
-    this.initializeCursor();
-    //window.addEventListener("touchmove", this.onTouchMove);
   },
   methods: {
     setupAudio() {
@@ -207,8 +210,16 @@ export default {
     },
 
     handleScroll() {
-      const scrollTop = event.target.scrollTop;
-      this.textMarginRight = `${scrollTop * 2}px`;
+      for (let section of this.sections) {
+        let sectionElement = document.getElementById(section);
+        if (sectionElement) {
+          let { top, bottom } = sectionElement.getBoundingClientRect();
+          if (top <= window.innerHeight / 2 && bottom >= window.innerHeight / 2) {
+            this.currentPage = section;
+            break;
+          }
+        }
+      }
     },
 
     scrollToNextPage() {
@@ -220,122 +231,18 @@ export default {
       this.scrollToPage(this.currentPage);
     },
 
-    scrollToPage(page){
-      const nextSection = this.$refs[page];
-      nextSection.$el.scrollIntoView({ behavior: 'smooth' });
-    },
-
-    startIdleTimer() {
-      const idleTimeout = 150;
-      this.timeoutID = setTimeout(this.goInactive(), idleTimeout);
-      this.idle = false;
-    },
-
-    resetIdleTimer() {
-      clearTimeout(this.timeoutID);
-      this.startIdleTimer();
-    },
-
-    goInactive() {
-      this.idle = true;
-      for (let dot of this.cursorDots) {
-          dot.lock();
+    scrollToPage(page) {
+      let section = document.getElementById(page);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
       }
-    },
-
-    buildDots(cursor) {
-      class Dot {
-        constructor(index) {
-          this.index = index;
-          this.anglespeed = 0.05;
-          this.x = 0;
-          this.y = 0;
-          this.scale = 1 - 0.05 * index;
-          this.range = 26/2 - 26/2 * this.scale+2;
-          this.element = document.createElement("span");
-          TweenMax.set(this.element, {scale: this.scale});
-          cursor.appendChild(this.element);
-        }
-
-        lock() {
-            this.lockX = this.x;
-            this.lockY = this.y;
-            this.angleX = Math.PI * 2 * Math.random();
-            this.angleY = Math.PI * 2 * Math.random();
-        }
-
-        draw() {
-          if (!this.idle || this.index <= Math.floor(20 * 0.3)) {
-            TweenMax.set(this.element, {x: this.x, y: this.y});
-          } else {
-            this.angleX += this.anglespeed;
-            this.angleY += this.anglespeed;
-            this.y = this.lockY + Math.sin(this.angleY) * this.range;
-            this.x = this.lockX + Math.sin(this.angleX) * this.range;
-            TweenMax.set(this.element, {x: this.x, y: this.y});
-          }
-        }
-      }
-
-      for (let i = 0; i < 20; i++) {
-          let dot = new Dot(i);
-          this.cursorDots.push(dot);
-      }
-    },
-
-    initializeCursor() {
-      const cursor = document.getElementById("cursor");
-      if (!cursor) return;
-
-      this.lastFrame += new Date();
-      this.buildDots(cursor);
-
-      const animateDots = timestamp => {
-        const delta = timestamp - this.lastFrame;
-
-        let { x, y } = this.cursorPosition;
-
-        this.cursorDots.forEach((dot, index, dots) => {
-          let nextDot = dots[index + 1] || dots[0];
-          
-          dot.x = x;
-          dot.y = y;
-          dot.draw(delta); 
-
-          if (!this.idle || index <= Math.floor(20 * 0.3)) {
-            const dx = (nextDot.x - dot.x) * 0.35;
-            const dy = (nextDot.y - dot.y) * 0.35;
-            x += dx;
-            y += dy;
-          }
-        });
-
-        this.lastFrame = timestamp;
-        requestAnimationFrame(animateDots);
-      };
-
-      animateDots();
-    },
-
-    onMouseMove(event) {
-      this.cursorPosition = { x: event.clientX / 2 - 5, y: event.clientY / 2 - 5};
-      const cursor = document.getElementById('cursor');
-      if (cursor) {
-        cursor.style.left = `${this.cursorPosition.x}px`;
-        cursor.style.top = `${this.cursorPosition.y}px`;
-      }
-      this.resetIdleTimer();
-    },
+    }
   },
-
   beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
     if (this.audio) {
       this.audio.removeEventListener('ended', this.nextSong);
       this.audio.pause();
-    }
-    
-    if (this.onMouseMove) {
-      window.removeEventListener("mousemove", this.onMouseMove);
     }
   },
 }
@@ -361,17 +268,16 @@ export default {
   font-size: 12px;
   font-family: monospace;
   letter-spacing: 1px;
-  color: #e2dfd6;
+  color: #7a7b77;
   transition: all 0.3s ease;
 }
 
 ::v-deep .navbar-brand:hover {
-  font-size: 11px;
   font-family: monospace;
   letter-spacing: 1px;
   font-weight: bold;
-  color: #e2dfd6;
-  transform: scale(1.3);
+  color: #000000;
+  transform: scale(1.15);
 }
 
 .card-container {
@@ -519,7 +425,7 @@ button {
 .scroll-down-btn-container {
   position: fixed;
   bottom: 20px;
-  left: 50%;
+  left: 10%;
   transform: translateX(-50%);
 }
 
@@ -529,42 +435,18 @@ button {
   justify-content: center;
   background: none;
   font-size: 1.5rem;
-  border: 2px solid #e2dfd6;
+  border: 2px solid #7a7b77;
   border-radius: 50%;
   width: 50px;
   height: 50px;
-  color: #e2dfd6;
+  color: #7a7b77;
   cursor: pointer;
   transition: transform 0.3s ease;
-  text-shadow: 1px 1px 3px #00000062;
-  box-shadow: 1px 1px 3px #00000062;
 }
 
 ::v-deep .scroll-down-btn:hover {
   transform: scale(1.2);
-}
-</style>
-
-<style>
-.cursor {
-  position: fixed;
-  display: block;
-  top: 0;
-  left: 0;
-  border-radius: 0;
-  background-color: #e2dfd6;
-  transform-origin: center;
-  pointer-events: none;
-  z-index: 1000;
-}
-
-.cursor span {
-  position: absolute;
-  display: block;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background-color: #e2dfd6;
-  transform: translate(-50%, -50%);
+  color: #000000;
+  border: 2px solid #000000;
 }
 </style>

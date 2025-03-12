@@ -3,7 +3,7 @@
     <div class="portfolio-page">
       <h2 class="title-overlay">{{ title }}</h2>
       <div class="welcome-message">WELCOME!</div>
-      <img :src="require(`@/assets/images/flower2.jpg`)" class="background" />
+      <img :src="require(`@/assets/images/portfolio.png`)" class="background" />
     </div>
 
   </div>
@@ -93,7 +93,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -100%);
   font-size: 70px;
-  color: #e2dfd6;
+  color: #000000;
   font-family: 'EB Garamond';
   font-weight: 900;
   text-align: center;
@@ -104,13 +104,14 @@ export default {
 .welcome-message {
   position: relative;
   z-index: 1;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 2px;
   transform: translateY(50%);
-  color: #e2dfd6;
+  color: #000000;
+  font-weight: bold;
   font-family: monospace;
-  border: 1px solid #e2dfd6;
-  border-color: #e2dfd6;
+  border: 1px solid #000000;
+  border-color: #000000;
   border-radius: 20px;
   padding: 5px;
   padding-left: 40px;
