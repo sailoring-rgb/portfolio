@@ -2,15 +2,33 @@
   <div class="body" @scroll="handleScroll" style="overflow-y: scroll;">
     <nav class="navbar fixed-top navbar-expand-lg"
     :class="{'navbar-dark bg-dark': currentPage !== 'homePage'}"
-    style="border-bottom: 1px solid #7a7b77;">
+    style="border-bottom: 1px solid #212529;">
       <div class="container-fluid">
         <a @click="scrollToPage('homePage')">
-          <img src="./assets/logo.png" style="width:50px;align-items: center;">
+          <img :src="currentPage === 'homePage' ? require(`@/assets/images/logo-dark.png`) : require(`@/assets/images/logo-light.png`)" 
+          style="width:35px; align-items: center;">
         </a>
-        <a class="navbar-brand" @click="scrollToPage('aboutPage')" >ABOUT</a>
-        <a class="navbar-brand" @click="scrollToPage('backgroundPage')" >BACKGROUND</a>
-        <a class="navbar-brand" @click="scrollToPage('projectsPage')" >PROJECTS</a>
-        <a class="navbar-brand" style="margin-right: 10%;" @click="scrollToPage('contactsPage')" >CONTACTS</a>
+        <a class="navbar-brand" 
+          :class="{'nav-dark': currentPage === 'homePage', 'nav-light': currentPage !== 'homePage'}" 
+          @click="scrollToPage('aboutPage')">
+          ABOUT
+        </a>
+        <a class="navbar-brand" 
+          :class="{'nav-dark': currentPage === 'homePage', 'nav-light': currentPage !== 'homePage'}" 
+          @click="scrollToPage('backgroundPage')">
+          BACKGROUND
+        </a>
+        <a class="navbar-brand" 
+          :class="{'nav-dark': currentPage === 'homePage', 'nav-light': currentPage !== 'homePage'}" 
+          @click="scrollToPage('projectsPage')">
+          PROJECTS
+        </a>
+        <a class="navbar-brand" 
+          :class="{'nav-dark': currentPage === 'homePage', 'nav-light': currentPage !== 'homePage'}" 
+          style="margin-right: 10%;" 
+          @click="scrollToPage('contactsPage')">
+          CONTACTS
+        </a>
       </div>
     </nav>
 
@@ -264,19 +282,34 @@ export default {
   overflow-y: scroll;
 }
 
+::v-deep .nav-dark {
+  color: #7a7b77;
+}
+
+::v-deep .nav-light {
+  color: #e2dfd6;
+}
+
 ::v-deep .navbar-brand {
   font-size: 12px;
   font-family: monospace;
   letter-spacing: 1px;
-  color: #7a7b77;
   transition: all 0.3s ease;
 }
 
-::v-deep .navbar-brand:hover {
+::v-deep .nav-dark:hover {
   font-family: monospace;
   letter-spacing: 1px;
   font-weight: bold;
   color: #000000;
+  transform: scale(1.15);
+}
+
+::v-deep .nav-light:hover {
+  font-family: monospace;
+  letter-spacing: 1px;
+  font-weight: bold;
+  color: #e2dfd6;
   transform: scale(1.15);
 }
 
