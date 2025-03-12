@@ -274,6 +274,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   background: #e2dfd6;
+  height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .scrollable-content {
