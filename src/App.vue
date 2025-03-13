@@ -1,5 +1,5 @@
 <template>
-  <div class="body" @scroll="handleScroll" style="overflow-y: scroll;">
+  <div class="body" @scroll="handleScroll">
     <nav class="navbar fixed-top navbar-expand-lg"
     :class="{'navbar-dark bg-dark': currentPage !== 'homePage'}"
     style="border-bottom: 1px solid #212529;">
@@ -48,35 +48,29 @@
       <ContactsPage ref="contactsPage" />
     </div>
 
-    <div class="card-container">
-      <div v-if="!isMinimized">
-        <div class="card d-flex justify-content-center align-items-center shadow">
-          <p class="music-title">{{ Object.keys(songTitles[currentSongIndex])[0] }}</p>
-          <p class="music-author">{{ Object.values(songTitles[currentSongIndex])[0] }}</p>
-
-          <div class="progress-container">
-            <div class="progress-bar" ref="progressBar"></div>
-            <div class="progress-bar-dot" :style="{ left: progressPercent + '%' }"></div>
-          </div>
-
-          <div class="controls" >
-            <button @click="previousSong" class="btn" style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin-right: -10px;  color: #e2dfd6;">⏮</button>
-            <button @click="toggleAudio" class="btn" style="font-family: Arial, Helvetica, sans-serif; font-size: 20px; background: #e2dfd6; border-radius: 100px; width:45px; color: #687160;">
-              {{ isPlaying ? '⏸' : '▸' }}
-            </button>
-            <button @click="nextSong" class="btn" style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin-left: -10px; color: #e2dfd6;">⏭</button>
-          </div>
-        </div>
+    <footer class="music-bar">
+      <div class="vstack" style="text-align: left;justify-content: center;margin-left:25px">
+        <div class="music-author">{{ Object.values(songTitles[currentSongIndex])[0] }}</div>
+        <div class="music-title">{{ Object.keys(songTitles[currentSongIndex])[0] }}</div>
       </div>
 
-      <div v-if="isMinimized" style="position: fixed; left: 90%; bottom: 20px; transform: translateX(-50%);">
-        <button @click="toggleAudio" class="btn minimized-btn" :class="{ 'minimized': isMinimized }">
-          {{ isPlaying ? '⏸' : '▸' }}
+      <div class="controls">
+        <button @click="previousSong" class="btn control-btn">
+          <span class="icon">⏮</span>
+        </button>
+        <button @click="toggleAudio" class="btn play-btn" :style="getPlayButtonStyle">
+          {{ isPlaying ? '⏸' : '‣' }}
+        </button>
+        <button @click="nextSong" class="btn control-btn">
+          <span class="icon">⏭</span>
         </button>
       </div>
-      
-      <div class="minimize-maximize-btn" @click="toggleMinimized" :class="{ 'minimized': isMinimized }"></div>
-    </div>
+
+      <div class="progress-container" @click="seek">
+        <div class="progress-bar" ref="progressBar"></div>
+        <div class="progress-bar-dot" :style="{ left: progressPercent + '%' }"></div>
+      </div>
+    </footer>
 
     <div class="scroll-down-btn-container">
       <button @click="scrollToNextPage" class="scroll-down-btn">
@@ -263,6 +257,13 @@ export default {
       this.audio.pause();
     }
   },
+  computed: {
+    getPlayButtonStyle() {
+      return {
+        fontSize: this.isPlaying ? '1.5rem' : '2rem',
+      };
+    },
+  }
 }
 </script>
 
@@ -273,10 +274,14 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  background: #e2dfd6;
+  background: #e2e0d7;
   height: 100vh;
   width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
+}
+
+.section {
+  min-height: 100vh;
 }
 
 .scrollable-content {
@@ -316,126 +321,96 @@ export default {
   transform: scale(1.15);
 }
 
-.card-container {
+.music-bar {
   position: fixed;
-  bottom: 5%;
-  right: 7%;
-  z-index: 1;
-  width: 22%;
-  min-width: 150px;
-  max-width: 390px;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 70px;
+  background-color: #212529;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 1000;
+  padding: 10px;
+  padding-right: 5vw;
 }
 
-::v-deep .card {
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-right: 20px;
+}
+
+.control-btn{
   border: none;
-  border-radius: 15px;
-  background: #687160;
-  height: 150px;
+  cursor: pointer;
+  color: #e2dfd6;
+  font-family: monospace;
 }
 
-::v-deep .card.minimized {
-  width: 60px;
-  height: 60px;
-  padding: 0;
+.control-btn:hover{
+  border: none;
+  cursor: pointer;
+  color: #e2dfd6;
+  font-family: monospace;
 }
 
-::v-deep .controls {
-  margin-top: 10px;
+.play-btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #e2dfd6;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: #212529;
+  cursor: pointer;
+  font-family:monospace;
+  transition: background 0.5s, transform 0.3s;
 }
-button {
-  margin: 0 5px;
+
+.play-btn:hover{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #e2dfd6;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: #212529;
+  cursor: pointer;
+  font-family:monospace;
+  transform: scale(1.1);
 }
 
 ::v-deep .music-title{
   font-family: 'Arial Black';
   font-weight: 700;
-  font-size: 18px;
+  font-size: 11px;
   color: #e2dfd6;
-  text-align: center;
+  width: 100px;
 }
 
 ::v-deep .music-author{
   font-family: Arial, Helvetica, sans-serif;
   font-weight: normal;
-  font-size: 12px;
-  margin-top: -5%;
+  font-size: 11px;
   color: #e2dfd6;
-  text-align: center;
-}
-
-::v-deep .minimize-maximize-btn.minimized::after {
-  position: fixed;
-  content: '⤴';
-  left: 92%;
-  font-size: 0.8rem;
-  font-weight: bold;
-  font-family: Arial, Helvetica, sans-serif;
-  border-radius: 50%;
-  border: 1px solid #e2dfd6;
-  color: #e2dfd6;
-  width: 25px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: translateY(-200%);
-  cursor: pointer;
-}
-
-::v-deep .minimize-maximize-btn:not(.minimized)::after {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  margin: 5px;
-  content: '⤵';
-  font-size: 0.6rem;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
-  border-radius: 50%;
-  border: 1px solid #e2dfd6;
-  color: #e2dfd6;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-::v-deep .minimized-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: Arial, Helvetica, sans-serif; 
-  font-size: 1.5rem;
-  background: #e2dfd6;
-  border-radius: 50%;
-  color: #000;
-  width: 50px;
-  height: 50px;
-  box-shadow: 1px 1px 15px #0000003d;
-  cursor: pointer;
-}
-
-::v-deep .minimized-btn:hover{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: Arial, Helvetica, sans-serif; 
-  font-size: 1.5rem;
-  border: 2px solid #e2dfd6;
-  border-radius: 50%;
-  color: #e2dfd6;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
+  width: 100px;
 }
 
 ::v-deep .progress-container {
   align-items: center;
   position: relative;
-  width: 75%;
-  margin-top: 0.5vh;
+  width: 80%;
 }
 
 ::v-deep .progress-bar {
@@ -460,8 +435,8 @@ button {
 
 .scroll-down-btn-container {
   position: fixed;
-  bottom: 20px;
-  left: 10%;
+  left: 50%;
+  bottom: 80px;
   transform: translateX(-50%);
 }
 
