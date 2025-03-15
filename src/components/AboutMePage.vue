@@ -1,8 +1,15 @@
 <template>
   <div class="aboutMe" id="aboutMePage">
     <div class="portfolio-page">
-      <h3 class="title" >Get to know more <br><i>about me</i>!</h3>
-      <h5 class="description">kfsjefcisjfmcsrfmnc</h5>
+      <div class="text-container">
+        <h3 class="title" data-aos="fade-down" data-aos-anchor-placement="top-bottom">
+          Get to know more <br><i>about me</i>!
+        </h3>
+        <div class="welcome-message" data-aos="fade-down">ANA HENRIQUES</div>
+        <p class="description" data-aos="fade-left" data-aos-anchor-placement="top-bottom" data-aos-delay="500">
+          kfsjefcisjfmcsrfmnc
+        </p>
+      </div>
       <img :src="require(`@/assets/images/me-sticker.png`)" class="sticker" data-aos="zoom-in"/>
       <img :src="require(`@/assets/images/bg2.png`)" class="background" />
     </div>
@@ -10,49 +17,35 @@
 </template>
 
 <script>
-//import AOS from "aos";
-//import "aos/dist/aos.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default {
   name: 'AboutMePage',
   data(){
     return{
-      title: 'Get to know more <br><i>about me</i>!',
-      offset: 0,
-      skipCount: 0,
-      skipDelay: 15,
-      speed: 150
     }
   },
 
+  computed: {
+  },
+
   mounted() {
+    AOS.init();
   },
 
   methods: {
-    wordFlick() {
-      setInterval(() => {
-        const currentWord = this.words[this.currentWordIndex];
-
-          if (this.offset >= currentWord.length) {
-            this.skipCount++;
-            if (this.skipCount === 3) {
-              this.skipCount = 0;
-            }
-          } else {
-            this.offset++;
-          }
-        this.title = currentWord.substring(0, this.offset);
-      }, this.speed);
-    },
+  
   },
 
   updated() {
-    //AOS.refresh();
+    AOS.refresh();
   },
 };
 </script>
 
 <style scoped>
+
 .aboutMe {
   display: flex;
   flex-direction: column;
@@ -62,10 +55,14 @@ export default {
   overflow-y: hidden;
 }
 
-.image-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
+.text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  position: absolute;
+  top: 25%;
+  left: 64%;
 }
 
 .sticker {
@@ -78,10 +75,6 @@ export default {
 }
 
 .title {
-  position: absolute;
-  top: 50%;
-  left: 67%;
-  transform: translate(-5%, -100%);
   font-size: 60px;
   color: #e2dfd6;
   font-family: 'EB Garamond';
@@ -89,19 +82,32 @@ export default {
   text-align: right;
   z-index: 3;
   text-shadow: 1px 1px 3px #00000037;
+  white-space: nowrap;
+}
+
+.welcome-message {
+  z-index: 1;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #e2dfd6;
+  font-weight: bold;
+  font-family: monospace;
+  border: 1px solid #e2dfd6;
+  border-color: #e2dfd6;
+  border-radius: 20px;
+  padding: 5px;
+  padding-left: 40px;
+  padding-right: 40px;
+  margin-top: 10px;
+  margin-bottom: 50px;
 }
 
 .description {
-  position: absolute;
-  top: 50%;
-  left: 67%;
-  transform: translate(-5%, -100%);
   font-size: 15px;
   color: #e2dfd6;
   font-family: monospace;
   text-align: right;
   z-index: 3;
-  margin-top: 50px;
   text-shadow: 1px 1px 3px #00000037;
 }
 
