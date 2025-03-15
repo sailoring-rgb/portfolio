@@ -6,7 +6,7 @@
       <div class="container-fluid">
         <a @click="scrollToPage('homePage')">
           <img :src="currentPage === 'homePage' ? require(`@/assets/images/logo-dark.png`) : require(`@/assets/images/logo-light.png`)" 
-          style="width:35px; align-items: center;">
+          style="width:35px; align-items: center; cursor: pointer;">
         </a>
         <a class="navbar-brand" 
           :class="{'nav-dark': currentPage === 'homePage', 'nav-light': currentPage !== 'homePage'}" 
@@ -129,17 +129,14 @@ export default {
         {'One Day In Your Life': 'Michael Jackson'},
         {'House Of The Rising Sun': 'The Animals'},
         {'One More Night': 'Phil Collins'},
-        {'Daydream': 'Wallace Collection'},
         {'Sailing': 'Christopher Cross'},
-        {'Three Times A Lady': 'Commodores'},
         {'Broken Wings': 'Mr. Mister'},
         {"It's Over": 'Level 42'},
         {"Don't Wanna Lose You": 'Gloria Estefan'},
         {'Every Time You Go Away': 'Paul Young'},
         {'Against All Odds': 'Phil Collins'},
         {'Forever Young': 'Alphaville'},
-        {'Every Breath You Take': 'The Police'},
-        {'A Groovy Kind Of Love': 'Phil Collins'}
+        {'Every Breath You Take': 'The Police'}
       ],
       songs: [
         require('@/assets/songs/7475.mp3'),
@@ -149,17 +146,14 @@ export default {
         require('@/assets/songs/oneDayInYourLife.mp3'),
         require('@/assets/songs/houseOfTheRisingSun.mp3'),
         require('@/assets/songs/oneMoreNight.mp3'),
-        require('@/assets/songs/daydream.mp3'),
         require('@/assets/songs/sailing.mp3'),
-        require('@/assets/songs/threeTimesALady.mp3'),
         require('@/assets/songs/brokenWings.mp3'),
         require('@/assets/songs/itsOver.mp3'),
         require('@/assets/songs/dontWannaLoseYou.mp3'),
         require('@/assets/songs/everyTimeYouGoAway.mp3'),
         require('@/assets/songs/againstAllOdds.mp3'),
         require('@/assets/songs/foreverYoung.mp3'),
-        require('@/assets/songs/everyBreathYouTake.mp3'),
-        require('@/assets/songs/aGroovyKindOfLove.mp3')
+        require('@/assets/songs/everyBreathYouTake.mp3')
       ],
       sections: ['homePage', 'aboutPage', 'backgroundPage', 'projectsPage', 'contactsPage'],
       currentPage: 'homePage',
@@ -313,6 +307,7 @@ export default {
   font-family: monospace;
   letter-spacing: 1px;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 ::v-deep .nav-dark:hover {
@@ -336,7 +331,7 @@ export default {
   bottom: 0;
   right: 0;
   width: 100%;
-  height: 70px;
+  height: 55px;
   background-color: #212529;
   display: flex;
   align-items: center;
@@ -485,13 +480,13 @@ export default {
 
 ::v-deep .scroll-down-btn-dark:hover {
   transform: scale(1.2);
-  color: #000000;
-  border: 2px solid #000000;
+  color: #7a7b77;
+  border: 2px solid #7a7b77;
 }
 
 ::v-deep .scroll-down-btn-light:hover {
   transform: scale(1.2);
-  color: #ffffff;
-  border: 2px solid #ffffff;
+  color: #e2dfd6;
+  border: 2px solid #e2dfd6;
 }
 </style>

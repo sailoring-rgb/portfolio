@@ -5,12 +5,19 @@
         <h3 class="title" data-aos="fade-down" data-aos-anchor-placement="top-bottom">
           Get to know more <br><i>about me</i>!
         </h3>
-        <div class="welcome-message" data-aos="fade-down">ANA HENRIQUES</div>
+        <div class="btn-links">
+          <a href="https://www.linkedin.com/in/ana-henriques-824805113/" class="name" data-aos="fade-down">LINKEDIN</a>
+          <a href="https://mega.nz/file/AHARUCjJ#IJuzjSyHsB85Oz3gbEQFVikQY1jSfK7vuYwWVllHhuM" target="_blank" class="curriculum" data-aos="fade-down">
+            RESUME
+          </a>
+        </div>
         <p class="description" data-aos="fade-left" data-aos-anchor-placement="top-bottom" data-aos-delay="500">
-          kfsjefcisjfmcsrfmnc
+          I'm <b>Ana</b> (Paula) <b>Henriques</b>, a <b>software engineer</b> passionate about building intuitive and impactful software, from web and mobile applications to anything that sparks my curiosity. To me, software development is more than just writing lines of code: <mark>it's about creating experiences while solving real-world challenges, and continuously learning in an ever-evolving field</mark>.<br><br>
+
+          Beyond programming, you’ll often find me <b>deep in thought</b>, lost in a book that makes me question existence, or analyzing the hidden layers of a great movie. I have an insatiable <b>curiosity for different cultures</b> as I <b>love traveling</b> — <mark>whether it's exploring new places or simply understanding how people across the world think and live</mark>.
         </p>
       </div>
-      <img :src="require(`@/assets/images/me-sticker.png`)" class="sticker" data-aos="zoom-in"/>
+      <img :src="require(`@/assets/images/me-sticker.png`)" class="sticker" data-aos="zoom-in" data-aos-delay="500"/>
       <img :src="require(`@/assets/images/bg2.png`)" class="background" />
     </div>
   </div>
@@ -32,14 +39,35 @@ export default {
 
   mounted() {
     AOS.init();
+    this.markElements();
   },
 
   methods: {
-  
+    markElements(){
+      const markers = [...document.querySelectorAll('mark')];
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.intersectionRatio > 0) {
+          setTimeout(() => {
+          entry.target.style.animationPlayState = 'running';
+        }, 500);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.8,
+    });
+
+    markers.forEach(mark => {
+      observer.observe(mark);
+    });
+    }
   },
 
   updated() {
     AOS.refresh();
+    this.markElements();
   },
 };
 </script>
@@ -61,8 +89,9 @@ export default {
   justify-content: space-between;
   align-items: flex-end;
   position: absolute;
-  top: 25%;
+  top: 15%;
   left: 64%;
+  margin-right: 40px;
 }
 
 .sticker {
@@ -85,7 +114,12 @@ export default {
   white-space: nowrap;
 }
 
-.welcome-message {
+.btn-links {
+  display: flex;
+  flex-direction: row;
+}
+
+.name {
   z-index: 1;
   font-size: 11px;
   letter-spacing: 2px;
@@ -100,6 +134,35 @@ export default {
   padding-right: 40px;
   margin-top: 10px;
   margin-bottom: 50px;
+  margin-right: 15px;
+  text-decoration: none;
+}
+
+.name:hover {
+  transform: scale(1.15);
+}
+
+.curriculum {
+  z-index: 1;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #2e302b;
+  font-weight: bold;
+  font-family: monospace;
+  border: 1px solid #e2dfd6;
+  border-color: #e2dfd6;
+  border-radius: 20px;
+  background: #e2dfd6;
+  padding: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-top: 10px;
+  margin-bottom: 50px;
+  text-decoration: none;
+}
+
+.curriculum:hover {
+  transform: scale(1.15);
 }
 
 .description {
@@ -109,6 +172,8 @@ export default {
   text-align: right;
   z-index: 3;
   text-shadow: 1px 1px 3px #00000037;
+  text-align: justify;
+  width: 110%;
 }
 
 .background {
@@ -118,5 +183,27 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+mark {
+  --color1: #7a8d60;
+  --color2: #7a8d60;
+  --bg-height: 35%;
+    
+  all: unset;
+  background-image: linear-gradient(var(--color1), var(--color2));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 var(--bg-height);
+  animation: highlight 3s 1 ease-out;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
+}
+
+
+@keyframes highlight {
+  to {
+    background-size: 100% var(--bg-height);
+  }
 }
 </style>
