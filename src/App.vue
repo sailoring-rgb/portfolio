@@ -32,24 +32,26 @@
       </div>
     </nav>
 
-    <div id="homePage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
-      <HomePage ref="homePage" />
-    </div>
-    <div id="aboutPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center bg-light">
-      <AboutMePage ref="aboutPage" />
-    </div>
-    <div id="backgroundPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
-      <BackgroundPage ref="backgroundPage" />
-    </div>
-    <div id="projectsPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center bg-light">
-      <ProjectsPage ref="projectsPage" />
-    </div>
-    <div id="contactsPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
-      <ContactsPage ref="contactsPage" />
+    <div class="vstack">
+      <div id="homePage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
+        <HomePage ref="homePage" />
+      </div>
+      <div id="aboutPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
+        <AboutMePage ref="aboutPage" />
+      </div>
+      <div id="backgroundPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
+        <BackgroundPage ref="backgroundPage" />
+      </div>
+      <div id="projectsPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
+        <ProjectsPage ref="projectsPage" />
+      </div>
+      <div id="contactsPage" class="container-fluid section vh-100 d-flex align-items-center justify-content-center">
+        <ContactsPage ref="contactsPage" />
+      </div>
     </div>
 
     <footer class="music-bar">
-      <div class="vstack" style="text-align: left;justify-content: center;margin-left:25px">
+      <div class="vstack" style="text-align: right;justify-content: center;margin-right:20px">
         <div class="music-author">{{ Object.values(songTitles[currentSongIndex])[0] }}</div>
         <div class="music-title">{{ Object.keys(songTitles[currentSongIndex])[0] }}</div>
       </div>
@@ -73,7 +75,7 @@
     </footer>
 
     <div class="scroll-down-btn-container">
-      <button @click="scrollToNextPage" class="scroll-down-btn">
+      <button @click="scrollToNextPage" :class="{'scroll-down-btn-dark': currentPage !== 'aboutPage', 'scroll-down-btn-light': currentPage === 'aboutPage'}">
         {{ currentPage == sections[sections.length-1] ? '↑' : '↓'}}
       </button>
     </div>
@@ -267,6 +269,12 @@ export default {
 }
 </script>
 
+<style>
+#app {
+  background: #e2e0d7;
+}
+</style>
+
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
@@ -275,13 +283,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   background: #e2e0d7;
-  height: 100vh;
   width: 100%;
   overflow: hidden;
 }
 
 .section {
-  min-height: 100vh;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .scrollable-content {
@@ -396,7 +406,7 @@ export default {
   font-weight: 700;
   font-size: 11px;
   color: #e2dfd6;
-  width: 100px;
+  width: 170px;
 }
 
 ::v-deep .music-author{
@@ -404,7 +414,7 @@ export default {
   font-weight: normal;
   font-size: 11px;
   color: #e2dfd6;
-  width: 100px;
+  width: 170px;
 }
 
 ::v-deep .progress-container {
@@ -438,9 +448,26 @@ export default {
   left: 50%;
   bottom: 80px;
   transform: translateX(-50%);
+  z-index: 2;
 }
 
-::v-deep .scroll-down-btn {
+::v-deep .scroll-down-btn-light {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  font-size: 1.5rem;
+  border: 2px solid #e2dfd6;
+  color: #e2dfd6;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  z-index: 4;
+}
+
+::v-deep .scroll-down-btn-dark {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -448,16 +475,23 @@ export default {
   font-size: 1.5rem;
   border: 2px solid #7a7b77;
   border-radius: 50%;
+  color: #7a7b77;
   width: 50px;
   height: 50px;
-  color: #7a7b77;
   cursor: pointer;
   transition: transform 0.3s ease;
+  z-index: 4;
 }
 
-::v-deep .scroll-down-btn:hover {
+::v-deep .scroll-down-btn-dark:hover {
   transform: scale(1.2);
   color: #000000;
   border: 2px solid #000000;
+}
+
+::v-deep .scroll-down-btn-light:hover {
+  transform: scale(1.2);
+  color: #ffffff;
+  border: 2px solid #ffffff;
 }
 </style>

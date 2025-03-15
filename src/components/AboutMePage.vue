@@ -1,9 +1,11 @@
 <template>
   <div class="aboutMe" id="aboutMePage">
     <div class="portfolio-page">
-      <!--img :src="require(`@/assets/images/flower.jpg`)" class="background" /-->
+      <h3 class="title" >Get to know more <br><i>about me</i>!</h3>
+      <h5 class="description">kfsjefcisjfmcsrfmnc</h5>
+      <img :src="require(`@/assets/images/me-sticker.png`)" class="sticker" data-aos="zoom-in"/>
+      <img :src="require(`@/assets/images/bg2.png`)" class="background" />
     </div>
-
   </div>
 </template>
 
@@ -15,6 +17,11 @@ export default {
   name: 'AboutMePage',
   data(){
     return{
+      title: 'Get to know more <br><i>about me</i>!',
+      offset: 0,
+      skipCount: 0,
+      skipDelay: 15,
+      speed: 150
     }
   },
 
@@ -22,6 +29,21 @@ export default {
   },
 
   methods: {
+    wordFlick() {
+      setInterval(() => {
+        const currentWord = this.words[this.currentWordIndex];
+
+          if (this.offset >= currentWord.length) {
+            this.skipCount++;
+            if (this.skipCount === 3) {
+              this.skipCount = 0;
+            }
+          } else {
+            this.offset++;
+          }
+        this.title = currentWord.substring(0, this.offset);
+      }, this.speed);
+    },
   },
 
   updated() {
@@ -31,13 +53,12 @@ export default {
 </script>
 
 <style scoped>
-.home {
+.aboutMe {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center; 
   height: 100vh;
-  background: #e2dfd6;
   overflow-y: hidden;
 }
 
@@ -47,35 +68,41 @@ export default {
   height: 100vh;
 }
 
-.title-overlay {
+.sticker {
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 550px;
+  height: auto;
+  z-index: 1;
+}
+
+.title {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -100%);
-  font-size: 70px;
+  left: 67%;
+  transform: translate(-5%, -100%);
+  font-size: 60px;
   color: #e2dfd6;
   font-family: 'EB Garamond';
   font-weight: 900;
-  text-align: center;
-  z-index: 1;
+  text-align: right;
+  z-index: 3;
   text-shadow: 1px 1px 3px #00000037;
 }
 
-.welcome-message {
-  position: relative;
-  z-index: 1;
-  font-size: 10px;
-  letter-spacing: 2px;
-  transform: translateY(50%);
+.description {
+  position: absolute;
+  top: 50%;
+  left: 67%;
+  transform: translate(-5%, -100%);
+  font-size: 15px;
   color: #e2dfd6;
   font-family: monospace;
-  border: 1px solid #e2dfd6;
-  border-color: #e2dfd6;
-  border-radius: 20px;
-  padding: 5px;
-  padding-left: 40px;
-  padding-right: 40px;
-  margin-top: 5px;
+  text-align: right;
+  z-index: 3;
+  margin-top: 50px;
+  text-shadow: 1px 1px 3px #00000037;
 }
 
 .background {
@@ -83,7 +110,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   object-fit: cover;
 }
 </style>
