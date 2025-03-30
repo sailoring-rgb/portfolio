@@ -3,7 +3,7 @@
     <div class="portfolio-page">
       <h2 class="title-overlay">{{ title }}</h2>
       <div class="welcome-message">WELCOME!</div>
-      <img :src="require(`@/assets/images/portfolio.png`)" class="background" />
+      <img src="/images/home-bg.png" class="background fade-in" />
     </div>
 
   </div>
@@ -126,5 +126,19 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1.0s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

@@ -1,25 +1,25 @@
 <template>
   <div class="aboutMe" id="aboutMePage">
-    <div class="portfolio-page">
-      <div class="text-container">
-        <h3 class="title" data-aos="fade-down" data-aos-anchor-placement="top-bottom">
-          Get to know more <br><i>about me</i>!
-        </h3>
-        <div class="btn-links">
-          <a href="https://www.linkedin.com/in/ana-henriques-824805113/" class="name" data-aos="fade-down">LINKEDIN</a>
-          <a href="https://mega.nz/file/AHARUCjJ#IJuzjSyHsB85Oz3gbEQFVikQY1jSfK7vuYwWVllHhuM" target="_blank" class="curriculum" data-aos="fade-down">
-            RESUME
-          </a>
-        </div>
-        <p class="description" data-aos="fade-left" data-aos-anchor-placement="top-bottom" data-aos-delay="500">
-          I'm <b>Ana</b> (Paula) <b>Henriques</b>, a <b>software engineer</b> passionate about building intuitive and impactful software, from web and mobile applications to anything that sparks my curiosity. To me, software development is more than just writing lines of code: <mark>it's about creating experiences while solving real-world challenges, and continuously learning in an ever-evolving field</mark>.<br><br>
-
-          Beyond programming, you’ll often find me <b>deep in thought</b>, lost in a book that makes me question existence, or analyzing the hidden layers of a great movie. I have an insatiable <b>curiosity for different cultures</b> as I <b>love traveling</b> — <mark>whether it's exploring new places or simply understanding how people across the world think and live</mark>.
-        </p>
-      </div>
+    <div class="content-wrapper">
       <img :src="require(`@/assets/images/me-sticker.png`)" class="sticker" data-aos="zoom-in" data-aos-delay="500"/>
-      <img :src="require(`@/assets/images/bg2.png`)" class="background" />
+      <div class="text-container">
+          <h3 class="title" data-aos="fade-down" data-aos-anchor-placement="top-bottom">
+            Get to know more <br><i>about me</i>!
+          </h3>
+          <div class="btn-links">
+            <a href="https://www.linkedin.com/in/ana-henriques-824805113/" class="name" data-aos="fade-down">LINKEDIN</a>
+            <a href="https://mega.nz/file/AHARUCjJ#IJuzjSyHsB85Oz3gbEQFVikQY1jSfK7vuYwWVllHhuM" target="_blank" class="curriculum" data-aos="fade-down">
+              RESUME
+            </a>
+          </div>
+          <p class="description" data-aos="fade-left" data-aos-anchor-placement="top-bottom" data-aos-delay="500">
+            I'm <b>Ana</b> (Paula) <b>Henriques</b>, a <b>software engineer</b> passionate about building intuitive and impactful software, from web and mobile applications to anything that sparks my curiosity. To me, software development is more than just writing lines of code: <mark>it's about creating experiences while solving real-world challenges, and continuously learning in an ever-evolving field</mark>.<br><br>
+
+            Beyond programming, you’ll often find me <b>deep in thought</b>, lost in a book that makes me question existence, or analyzing the hidden layers of a great movie. I have an insatiable <b>curiosity for different cultures</b> as I <b>love traveling</b> — <mark>exploring new places or simply understanding how people across the world think and live</mark>.
+          </p>
+      </div>
     </div>
+    <img src="/images/about-bg.png" class="background" />
   </div>
 </template>
 
@@ -32,9 +32,6 @@ export default {
   data(){
     return{
     }
-  },
-
-  computed: {
   },
 
   mounted() {
@@ -73,32 +70,38 @@ export default {
 </script>
 
 <style scoped>
-
 .aboutMe {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   justify-content: center;
   align-items: center; 
+  gap: 40px;
   height: 100vh;
-  overflow-y: hidden;
+  padding: 0 5%;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items:center;
+  gap: 80px;
+  max-width: 1200px;
+  width: 100%;
+  position: absolute;
+  top: 12%;
+  left: 20%;
 }
 
 .text-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: flex-end;
-  position: absolute;
-  top: 15%;
-  left: 64%;
-  margin-right: 40px;
+  width: 45%;
 }
 
 .sticker {
-  position: absolute;
-  top: 15%;
-  left: 20%;
-  width: 550px;
+  width: 500px;
   height: auto;
   z-index: 1;
 }
