@@ -11,7 +11,7 @@
 
         <div class="image-card" data-aos="fade-up" data-aos-delay="650" @click="openCard('WORK')">
           <img :src="require(`@/assets/images/flower2.jpg`)"/>
-          <div class="overlay">WORK EXPERIENCE</div>
+          <div class="overlay">WORK</div>
         </div>
 
         <div class="image-card" data-aos="fade-up" data-aos-delay="950" @click="openCard('PUBLICATIONS')">
