@@ -3,7 +3,7 @@
     <div class="portfolio-page">
       <h2 class="title-overlay">{{ title }}</h2>
       <div class="welcome-message">WELCOME!</div>
-      <img src="/images/home-bg.png" class="background fade-in" />
+      <img src="/img/home-bg.png" class="background fade-in" />
     </div>
 
   </div>

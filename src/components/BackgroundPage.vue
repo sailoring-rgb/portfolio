@@ -28,7 +28,7 @@
         </div>
 
       </div>
-      <!--img src="/images/background-bg.png" class="background" /-->
+      <!--img src="/img/background-bg.png" class="background" /-->
     </div>
   </template>
   
