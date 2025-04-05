@@ -19,7 +19,7 @@
           </p>
       </div>
     </div>
-    <img src="/img/about-bg.png" class="background" />
+    <img :src="require(`@/assets/images/about-bg.png`)" class="background" />
   </div>
 </template>
 
