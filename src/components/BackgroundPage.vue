@@ -21,9 +21,9 @@
 
         <div v-if="isCardOpen" class="modal-overlay" @click="closeCard">
           <div class="modal-card" @click.stop data-aos="zoom-in">
+            <button class="close-icon" @click="closeCard">×</button>
             <h2>{{ selectedTitle }}</h2>
             <p>This is some detailed information about {{ selectedTitle }}.</p>
-            <button class="close-btn" @click="closeCard">Close</button>
           </div>
         </div>
 
@@ -170,13 +170,13 @@
   }
 
   .modal-card {
+    position: relative;
     background: white;
     padding: 20px;
     border-radius: 10px;
     width: 50vw;
     text-align: center;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    position: relative;
   }
 
   .modal-card h2 {
@@ -189,19 +189,18 @@
     color: #555;
   }
   
-  .close-btn {
-    background: #ff5e5e;
-    color: white;
+  .close-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    font-size: 1.5rem;
+    background: none;
     border: none;
-    padding: 10px 20px;
-    margin-top: 15px;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: background 0.3s;
-  }
-
-  .close-btn:hover {
-    background: #ff2e2e;
+    line-height: 1;
+    text-align: center;
+    transition: background 0.2s ease;
   }
   </style>
