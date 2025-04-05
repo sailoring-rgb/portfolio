@@ -109,7 +109,7 @@
 
   .image-card {
     position: relative;
-    width: 225px;
+    width: 250px;
     height: 300px;
     border-radius: 20px;
     overflow: hidden;
@@ -121,7 +121,7 @@
   }
 
   .image-card img {
-    width: 100%;
+    width: 120%;
     height: 100%;
     object-fit: cover;
     transition: 0.3s ease-in-out;
@@ -140,7 +140,7 @@
     color: white;
     font-size: 15px;
     letter-spacing: 2px;
-    font-family: monospace;
+    font-family: 'EB Garamond';
     font-weight: bold;
     text-align: center;
     transition: background 0.3s ease-in-out;
